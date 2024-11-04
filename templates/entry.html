@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Information ID (GIID) System - {{ data.giid }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .search-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-box input[type="submit"] {
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .entry {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .entry h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .entry-section {
+            margin-bottom: 15px;
+            word-wrap: break-word;
+        }
+
+        .entry-section strong {
+            color: #1f3987;
+        }
+
+        .fingerprint {
+            word-wrap: break-word;
+            margin: 20px 0;
+        }
+
+        .tags span {
+            display: inline-block;
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            margin: 3px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        .risk-level {
+            color: red;
+            font-weight: bold;
+        }
+
+        .link {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        table {
+            width: 50%;
+
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table#organizations {
+            width: 90%;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Search Box -->
+        <form id="fingerprintForm" action="/search" method="post">
+        <div class="search-box">
+            <input type="text"  name="query" placeholder="Search by narattive...">
+            <input type="submit" value="Search">
+        </div>
+    </form>
+
+        <!-- Entry Example -->
+        <div class="entry">
+            <h2>General Information ID</h2>
+            <div class="fingerprint">
+                <strong>{{ data.giid }}</strong>
+                <p><a href="">Download the fingerprint vector<img src="{{url_for('static',filename='fp.png')}}" width="20"></a></p>
+            </div>
+
+            <div class="entry-section">
+                <strong>Date Identified or Published:</strong>
+                <p>{{ data.date_identified }}</p>
+            </div>
+
+            <div class="entry-section">
+                <strong>Sample Narratives:</strong>
+                <ul>
+                    {% for narrative in data.narrative %}
+                        <li>{{ narrative }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="entry-section">
+                <strong>Language Distribution:</strong>
+                <table id="organizations">
+                    <thead>
+                        <tr>
+                            <th>Language</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in data.language_distribution %}
+                            <tr>
+                                <td>{{ entry.language }}</td>
+                                <td>{{ entry.percentage }}%</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    
+
+            <div class="entry-section tags">
+                <strong>Tags:</strong>
+                <span>Health</span><span>Medical</span><span>Fluorine</span>
+            </div>
+
+            <div class="entry-section">
+                <strong>Evaluation by organizations:</strong>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Organization</th>
+                            <th>Evaluation</th>
+                            <th>Date of Evaluation</th>
+                            <th>Comments</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for eval in data.evaluations %}
+                            <tr>
+                                <td>{{ eval.organization }}</td>
+                                <td>{{ eval.evaluation }}</td>
+                                <td>{{ eval.date_of_evaluation }}</td>
+                                <td>{{ eval.comments }}</td>
+                                <td><a href="{{ eval.link }}" target="_blank">Link</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

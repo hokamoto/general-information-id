@@ -1,0 +1,13 @@
+[Unit]
+Description=GIID
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root
+Environment="PATH=/root/.venv/bin"
+ExecStart=/root/.venv/bin/python3 /root/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

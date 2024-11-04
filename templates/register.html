@@ -1,0 +1,51 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Fingerprint Generator</title>
+</head>
+<body>
+    <h1>Generate Semantic Fingerprint</h1>
+    <form id="fingerprintForm" action="/generate_fingerprint" method="post">
+        <label for="texts">Enter texts (one per line):</label><br>
+        <textarea id="texts" name="texts" rows="10" cols="50" placeholder="Enter one or more texts, each on a new line"></textarea><br><br>
+        <input type="submit" value="Generate Fingerprint">
+    </form>
+
+    <form id="fingerprintForm" action="/search" method="post">
+        <input type="text" name="query"><br><br>
+        <input type="submit" value="Search">
+    </form>
+
+
+    <h2>Result</h2>
+    <div id="result"></div>
+
+    <script>
+        // Handle form submission with AJAX to display results without refreshing the page
+        document.getElementById("fingerprintForm").onsubmit = async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            const response = await fetch("/generate_fingerprint", {
+                method: "POST",
+                body: formData
+            });
+            
+            const result = await response.json();
+            const resultDiv = document.getElementById("result");
+
+            if (response.ok) {
+                resultDiv.innerHTML = `
+                    <p><strong>Average Vector:</strong> ${JSON.stringify(result.average_vector)}</p>
+                    <p><strong>Fingerprint:</strong> ${result.fingerprint}</p>
+                `;
+            } else {
+                resultDiv.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${result.error}</p>`;
+            }
+        };
+    </script>
+</body>
+</html>
